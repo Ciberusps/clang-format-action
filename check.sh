@@ -62,13 +62,13 @@ EXCLUDE_REGEX="$4"
 INCLUDE_REGEX="$5"
 CHANGED_ONLY="$6"
 
-diff_only() {
-	formatted="$(git diff -U0 --no-color --relative $(git hash-object -t tree /dev/null) | \
-		docker run -i -v "$(pwd)":"$(pwd)" -w "$(pwd)" \
-			--rm ghcr.io/jidicula/clang-format:"$CLANG_FORMAT_MAJOR_VERSION" \
-			/usr/bin/clang-format-diff -i -style=file -fallback-style="$FALLBACK_STYLE")"
-	[[ -n $formatted ]] && exit_code=1
-}
+# diff_only() {
+# 	formatted="$(git diff -U0 --no-color --relative $(git hash-object -t tree /dev/null) | \
+# 		docker run -i -v "$(pwd)":"$(pwd)" -w "$(pwd)" \
+# 			--rm ghcr.io/jidicula/clang-format:"$CLANG_FORMAT_MAJOR_VERSION" \
+# 			/usr/bin/clang-format-diff -i -style=file -fallback-style="$FALLBACK_STYLE")"
+# 	[[ -n $formatted ]] && exit_code=1
+# }
 
 # Set the regex to an empty string regex if nothing was provided
 if [[ -z $EXCLUDE_REGEX ]]; then
@@ -106,7 +106,7 @@ docker run \
 	--workdir "$(pwd)" \
 	ghcr.io/jidicula/clang-format:"$CLANG_FORMAT_MAJOR_VERSION" --version
 
-if [[ $CHANGED_ONLY == false ]]; then
+# if [[ $CHANGED_ONLY == false ]]; then
 	# All files improperly formatted will be printed to the output.
 	src_files=$(find "$CHECK_PATH" -name .git -prune -o -regextype posix-egrep -regex "$INCLUDE_REGEX" -print)
 
@@ -118,9 +118,9 @@ if [[ $CHANGED_ONLY == false ]]; then
 			format_diff "${file}"
 		fi
 	done
-else
-	diff_only
-fi
+# else
+# 	diff_only
+# fi
 
 # global exit code is flipped to nonzero if any invocation of `format_diff` has
 # a formatting difference.
