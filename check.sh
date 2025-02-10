@@ -63,11 +63,11 @@ INCLUDE_REGEX="$5"
 CHANGED_ONLY="$6"
 
 diff_only() {
-	formatted="$(git diff -U0 --no-color --relative HEAD | \
+	formatted="$(git diff -U0 --no-color --relative HEAD~1 | \
 		docker run -i -v "$(pwd)":"$(pwd)" -w "$(pwd)" \
 			--rm ghcr.io/jidicula/clang-format:"$CLANG_FORMAT_MAJOR_VERSION" \
-			/usr/bin/clang-format-diff -p1 -style=file -fallback-style="$FALLBACK_STYLE" \
-			-iregex "$INCLUDE_REGEX")"
+			/usr/bin/clang-format-diff -i -style=file -fallback-style="$FALLBACK_STYLE" \
+			--files "$INCLUDE_REGEX")"
 	[[ -n $formatted ]] && exit_code=1
 }
 
