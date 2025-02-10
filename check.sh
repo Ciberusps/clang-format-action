@@ -66,8 +66,7 @@ diff_only() {
 	formatted="$(git diff -U0 --no-color --relative $(git hash-object -t tree /dev/null) | \
 		docker run -i -v "$(pwd)":"$(pwd)" -w "$(pwd)" \
 			--rm ghcr.io/jidicula/clang-format:"$CLANG_FORMAT_MAJOR_VERSION" \
-			/usr/bin/clang-format-diff -i -style=file -fallback-style="$FALLBACK_STYLE" \
-			--files "$INCLUDE_REGEX")"
+			/usr/bin/clang-format-diff -p1 -i -style=file -fallback-style="$FALLBACK_STYLE")"
 	[[ -n $formatted ]] && exit_code=1
 }
 
